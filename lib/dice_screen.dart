@@ -1,15 +1,9 @@
-import 'dart:math';
+import 'package:dice/dice%20app/dice_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class DiceAppScreen extends StatefulWidget {
+class DiceAppScreen extends StatelessWidget {
   const DiceAppScreen({Key? key}) : super(key: key);
-
-  @override
-  State<DiceAppScreen> createState() => _DiceAppScreenState();
-}
-
-class _DiceAppScreenState extends State<DiceAppScreen> {
-  var num = 1;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,10 +22,13 @@ class _DiceAppScreenState extends State<DiceAppScreen> {
           child: Center(
             child: Column(
               children: [
-                Expanded(
-                    child: Image(
-                  image: AssetImage('assets/images/dice$num.png'),
-                  width: 255,
+                Expanded(child: BlocBuilder<DiceBloc, DiceState>(
+                  builder: (context, state) {
+                    return Image(
+                      image: AssetImage('assets/images/dice${state.diceCount}.png'),
+                      width: 255,
+                    );
+                  },
                 )),
                 const SizedBox(
                   width: 15,
@@ -43,9 +40,10 @@ class _DiceAppScreenState extends State<DiceAppScreen> {
                           const EdgeInsets.symmetric(horizontal: 130)),
                     ),
                     onPressed: () {
-                      setState(() {
-                        num = Random().nextInt(6) + 1;
-                      });
+                      context.read<DiceBloc>().add(ChangeDice());
+                      // setState(() {
+                      //   num = Random().nextInt(6) + 1;
+                      // });
                     },
                     child: const Text(
                       'Roll',
